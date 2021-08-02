@@ -1,0 +1,45 @@
+global:
+  all:
+    namespace: dev
+
+  recommendationservice: 
+    service: 
+          port: 8080
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 220Mi
+  limits:
+    cpu: 200m
+    memory: 450Mi
+
+
+replicaCount: 1
+image:
+  repository: 13s10/recommendationservice
+ports:
+  containerPort: 8080
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:8080"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:8080"]
+
+
+service:
+  type: ClusterIP
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "8080"
+    PRODUCT_CATALOG_SERVICE_ADDR: "productcatalogservice:3550"
+
+
+

@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "emailservice.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "emailservice.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "emailservice.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccountName }}
+      terminationGracePeriodSeconds: 5
+      containers:
+        - name: {{ .Chart.Name }}
+          image: {{ .Values.image.repository }}
+          envFrom:
+          - configMapRef:
+             name: {{ include "emailservice.fullname" . }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ports.containerPort }}
+              protocol: TCP
+          readinessProbe:
+            exec:
+              command: {{ .Values.readiness.command }}
+          livenessProbe:
+            exec:
+              command: {{ .Values.liveness.command }}   
+          resources: 
+            {{ toYaml .Values.resources | nindent 12 }}        
+
+        

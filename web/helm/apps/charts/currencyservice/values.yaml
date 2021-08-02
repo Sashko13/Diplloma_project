@@ -1,0 +1,38 @@
+global:
+  all:
+    namespace: dev
+
+  currencyservice: 
+    service: 
+        port: 7000
+
+  
+replicaCount: 1
+image:
+  repository: 13s10/currencyservice
+ports:
+  containerPort: 7000
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:7000"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:7000"]
+
+serviceAccountName: default
+
+service:
+  type: ClusterIP
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "7000"
+
+
+
+

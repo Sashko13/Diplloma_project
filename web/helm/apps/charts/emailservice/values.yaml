@@ -1,0 +1,39 @@
+global:
+  all:
+    namespace: dev
+
+  emailservice: 
+    service: 
+          port: 5000
+          targetPort: 8080
+
+  
+replicaCount: 1
+image:
+  repository: 13s10/emailservice
+ports:
+  containerPort: 8080
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:8080"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:8080"]
+
+serviceAccountName: default
+
+service:
+  type: ClusterIP
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "8080"
+
+
+
+

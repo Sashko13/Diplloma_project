@@ -1,0 +1,36 @@
+global:
+  all:
+    namespace: dev
+
+  productcatalogservice: 
+    service: 
+          port: 3550
+  
+replicaCount: 1
+image:
+  repository: 13s10/productcatalogservice
+ports:
+  containerPort: 3550
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:3550"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:3550"]
+
+
+service:
+  type: ClusterIP
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "3550"
+
+
+
+

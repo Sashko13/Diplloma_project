@@ -1,0 +1,35 @@
+global:
+  all:
+    namespace: dev
+
+  cartservice: 
+    service: 
+        port: 7070
+
+  
+replicaCount: 1
+image:
+  repository: 13s10/cartservice
+ports:
+  containerPort: 7070
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:7070", "-rpc-timeout=5s"]
+
+
+service:
+  type: ClusterIP
+resources: 
+  limits:
+    cpu: 300m
+    memory: 128Mi
+  requests:
+    cpu: 200m
+    memory: 64Mi
+
+configmap:
+  data:
+    name: REDIS_ADDR
+    value: redis-cart:6379
+

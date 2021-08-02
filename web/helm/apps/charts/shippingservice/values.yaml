@@ -1,0 +1,43 @@
+global:
+  all:
+    namespace: dev
+
+  shippingservice: 
+    service: 
+      port: 50051
+service:
+  type: ClusterIP
+resources:
+  requests:
+    cpu: 100m
+    memory: 220Mi
+  limits:
+    cpu: 200m
+    memory: 450Mi
+
+serviceAccountName: default
+
+replicaCount: 1
+image:
+  repository: 13s10/shippingservice
+ports:
+  containerPort: 50051
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:50051"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:50051"]
+
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "50051"
+
+

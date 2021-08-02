@@ -1,0 +1,38 @@
+
+stages:
+  - Build
+  - Push
+  - Deploy
+
+before_script:
+  - whoami
+  - DOCKER_IMAGE_NAME=$(echo "$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]')
+  - LOWER_PROJECT_NAME=$(echo "$CI_PROJECT_NAME" | tr '[:upper:]' '[:lower:]')
+  - HELM_SUBCHART_NAME=$(echo "$CI_PROJECT_NAME" | awk -F '-' '{print $2}' )
+
+
+Build:
+  stage: Build
+  script:
+    # - docker login -u$DOCKER_REG_USER -p$DOCKER_REG_PASS $DOCKER_REGISTRY/$LOWER_PROJECT_NAME
+    - docker build --rm -t $DOCKER_REG_USER/$DOCKER_IMAGE_NAME-0.$CI_PIPELINE_IID .
+
+
+Push:
+  stage: Push
+  dependencies: ["Build"]
+  script:
+    - docker login -u$DOCKER_REG_USER -p$DOCKER_REG_PASS $DOCKER_REGISTRY/$LOWER_PROJECT_NAME
+    - docker push  $DOCKER_REG_USER/$DOCKER_IMAGE_NAME-0.$CI_PIPELINE_IID
+
+
+Deploy:
+  stage: Deploy
+  dependencies: ["Push"]
+  script:
+    - curl -o $LOWER_PROJECT_NAME-helm.tar.gz --header "PRIVATE-TOKEN:$API_HELM" "http://localhost:10080/api/v4/projects/8/repository/archive?/raw?ref=main"
+    - tar -xvzf $LOWER_PROJECT_NAME-helm.tar.gz
+    - cd helm-main-606ca02d129dd9a565ad4ddc99bdbf0acf01796a
+    - helm upgrade --install productcatalogservice ./apps/charts/productcatalogservice --set image.repository=$DOCKER_REG_USER/$DOCKER_IMAGE_NAME-0.$CI_PIPELINE_IID --namespace dev
+  when: always
+

@@ -1,0 +1,33 @@
+ global:
+  all:
+    namespace: dev
+
+  paymentservice: 
+    service: 
+        port: 50051
+        type: ClusterIP
+
+replicaCount: 1
+image:
+  repository: 13s10/paymentservice
+ports:
+  containerPort: "50051"
+readiness:
+  command: ["/bin/grpc_health_probe", "-addr=:50051"]
+liveness:
+  command: ["/bin/grpc_health_probe", "-addr=:50051"]
+
+serviceAccountName: default
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 128Mi
+
+configmap:
+  data:
+    PORT: "50051"
+
