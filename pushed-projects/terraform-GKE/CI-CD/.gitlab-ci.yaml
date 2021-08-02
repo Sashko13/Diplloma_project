@@ -1,0 +1,60 @@
+stages: 
+  - terraform init
+  - validate
+  - terraform plan
+  - terraform apply 
+
+image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}/terraform
+  TF_PASSWORD: pVYXeLsyB2NPiNFYAKZX
+  
+before_script:
+  - cd ${TF_ROOT}
+
+cache:
+  key: default.tfstate
+  paths:
+    - ${TF_ROOT}/.terraform
+
+init:
+  stage: terraform init
+  script:
+    - gitlab-terraform init
+
+validate:
+  stage: validate
+  script:
+    - gitlab-terraform validate
+
+plan:
+  stage: terraform plan
+  script:
+    - gitlab-terraform plan
+  artifacts:
+    name: plan
+    paths:
+      - ${TF_ROOT}/plan.cache
+    reports:
+      terraform: ${TF_ROOT}/plan.json
+
+apply:
+  stage: terraform apply
+  environment:
+    name: apply
+  script:
+    - gitlab-terraform apply -auto-approve
+  dependencies:
+    - plan
+  when: manual
+
+destroy: 
+  stage: terraform apply
+  environment:
+    name: destroy
+  script:
+    - gitlab-terraform apply -destroy -auto-approve
+  dependencies:
+    - plan
+  when: manual

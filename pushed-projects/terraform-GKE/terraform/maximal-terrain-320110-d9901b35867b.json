@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "maximal-terrain-320110",
+  "private_key_id": "d9901b35867bb8398d61ea2d22a16fda51ccf0d2",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQClxJ74HYtBl+q7\nBP/rhng2xyl3BRTkA6YGtXXwpIIl+mFW75qXMM/LRIyJsUeFC29VW/GlKkgr3pnD\nBXUjZjCTOm63DCoD+jSnysXVSMJMgoyN2UfZauobwQFE9YOKvHsecoTX51w6UNaJ\nL6p06cz9cfGkVRgOVpOWkMRqQ4ZYuxGvQ7YCftRSfNIoeUfZSnXbm/SIlkSG3QeK\nLgJF5kKSsASfW78DwIP6YtOjZ9kAlrIPGlq5GPmEG1t9bx79MUjRs4RvvYWSHw66\nXDK7rB0u48QhTGby04ItS2YPdaUuy/bcQ0g1hYj1xd3053L8QVs0nr3kGbiqsEhB\neTB4DKI9AgMBAAECggEAJg/nkID4IK+JLjgPqzzNDYbddn6sNU7BKHkyA3dCiwXa\no+OQU3bZv4qV2mfiTCI8BhV+frYerDQIikcOhnpIXQXlthIM86zXuk9M7ZQvSPIQ\n4+EoJjvuVUET0YmuEoUEoBEbf5eYDavSFt3i/cVRVEB9g4YmZ+RpLwE+mEe46VZr\ncSqjqLXW7gFWKTvYLqkpfjzjDYi33kcs+aWu5IxKWAtI/mDuRycgG6EYmhvJ1FBI\n7kp9704eweUOy6pvdv4SiAaZzf9ScOehCcy9WgDtgSmfx3jF8KCfEayVNFM8/uk4\nORarkEhuS8aVb//QqpA++yzIcOUUw4dyiwVClBUGAQKBgQDqEqiFlrwoRW7lS6B7\nXKtX7hF3mC9U3aYELARDhBgVZe/MFisY57QyoGGUbnfgT7q8A9zMZ7UR9E3gGz85\nG6VW3xAvxvi7TXctmcDZ7jVozpExkvCkfSyj7di5LApXDpARD9MwH/nXmRUlcr40\ne0ZGqHq/+wzT5WfT6PMJ3+EiEQKBgQC1S+7OpU3oATWYTV2bLUDvQa1On+d06vdm\nbtudpbcPBgDZguWUalk5woHsZ6CPNpt/ZA3ZjKjwaGfOHmOyrxik8uQVBfn/NNVN\nkrHRRUJQt5N5oazIJuArpgDqqUxAnZxFBx1nT5dr4XBTaXAjyccQitoHegllGbpm\nsavkBQ4RbQKBgQDGLoYAlV85uY/rE90Mlal9CVRArdllQUUOwzXY9D5v357obNyQ\neZ1YP/JeeimFAfxYs+x+JFBqoy5MUMV21LFom/RYf16ZNz1wnn1qBwWxdzP3hTG6\nE0F4iii0n1Uh4HKZ/4wPcwNWR4Zf7oacaMNXj85ePXDe95yxDsq30ZYMAQKBgGU7\n0E59iaIaQsYXtUQ4IcE3yEFWEtV7esgs8N73sN9nt8O9TtrwA4C4Nvo95y7xDCU3\nRnCLFa6gbg5vc7ZMBZPduTRwEOfLpavaVQaJCP2vdF7/w05EPvrAiFSAUn7mQ2Nc\nFLQigmgQCzvYbXDedBStpA92upZEpow/e78of3GFAoGAAKYv8lg6oSK3uo/qLt6h\nwmyMr/uzgo+acF8CAB94KlYvAC4t2WmmSUW5bQNY/obMJlI+KFSgk/6wDgMQy3KK\n9O1x7fVrgcqzFaZP2AbQk0gyGc9j0Tn9CTTuYKIODEUoseMbZQKAoGHiK5/99WKt\nSbgn3jMnrHKGtgZSTTjC8Qs=\n-----END PRIVATE KEY-----\n",
+  "client_email": "bucket-diploma@maximal-terrain-320110.iam.gserviceaccount.com",
+  "client_id": "110081884356380551366",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bucket-diploma%40maximal-terrain-320110.iam.gserviceaccount.com"
+}

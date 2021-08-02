@@ -1,0 +1,103 @@
+Чтобы развернуть кластер GKE с помощью terraform в google cloud console, необходимо в созданном проекте gcp включить Kubernetes Engine API и Cloud Resource Managment API;
+
+
+connect to diploma-cluster:
+gcloud container clusters get-credentials diploma-cluster --zone europe-central2-a --project maximal-terrain-320110
+
+
+
+
+install gitlab to GKE:
+1) enable API's: 
+    gcloud services enable container.googleapis.com \
+       servicenetworking.googleapis.com \
+       cloudresourcemanager.googleapis.com \
+       redis.googleapis.com \
+       sqladmin.googleapis.com
+
+2) Configure IAM
+
+    export PROJECT_ID=$(gcloud config get-value project)
+    gcloud iam service-accounts create gitlab-gcs \
+    --display-name "GitLab Cloud Storage"
+    gcloud iam service-accounts keys create --iam-account \
+    gitlab-gcs@${PROJECT_ID}.iam.gserviceaccount.com gcs-key.json
+    gcloud projects add-iam-policy-binding --role roles/storage.admin ${PROJECT_ID} \
+    --member=serviceAccount:gitlab-gcs@${PROJECT_ID}.iam.gserviceaccount.com
+
+3) create cloud storage bucets:
+
+    export PROJECT_ID=$(gcloud config get-value project)
+    gsutil mb gs://${PROJECT_ID}-gitlab-backups
+    gsutil mb gs://${PROJECT_ID}-git-lfs
+    gsutil mb gs://${PROJECT_ID}-gitlab-artifacts
+    gsutil mb gs://${PROJECT_ID}-gitlab-uploads
+    gsutil mb gs://${PROJECT_ID}-gitlab-packages
+    gsutil mb gs://${PROJECT_ID}-gitlab-pseudo
+    gsutil mb gs://${PROJECT_ID}-runner-cache
+    gsutil mb gs://${PROJECT_ID}-registry
+
+4) configure networking:
+
+    Create external IP:
+
+    gcloud compute addresses create gitlab --region europe-central2 --description "Gitlab Ingress IP"
+
+    Create a private IP address range that can be assigned to your Cloud SQL for PostgreSQL database instance so that it can't be reached from outside of your VPC network:
+
+    export PROJECT_ID=$(gcloud config get-value project)
+    gcloud compute addresses create gitlabsql --global --prefix-length 20 \
+    --description="Gitlab Cloud SQL range" --network=kube
+    gcloud services vpc-peerings connect \
+    --service=servicenetworking.googleapis.com --ranges=gitlab-sql \
+    --network=kube --project ${PROJECT_ID}
+
+<!-- 5) Create the PostgreSQL instance and database:
+
+    gcloud beta sql instances create gitlab-db --network default \
+    --database-version=POSTGRES_12 --cpu 2 --memory 8 --no-assign-ip \
+    --storage-auto-increase --zone europe-central2-a
+
+6) create DB user and password
+
+    export PASSWORD=G1tPa$$
+    gcloud sql users create gitlab --instance gitlab-db --password ${PASSWORD}
+
+7) create DB that gitlab will use 
+
+    gcloud sql databases create --instance gitlab-db gitlab_diploma
+
+8) Create Redis instance:
+
+    gcloud redis instances create gitlab --size=2 --region=us-central1 \
+    --zone=us-central1-a --tier standard -->
+
+    Install the GitLab chart
+        The GitLab chart requires custom configuration so that it can leverage the external datastores that you previously provisioned.
+
+    Download the configuration file template:
+
+
+        wget https://raw.githubusercontent.com/terraform-google-modules/terraform-google-gke-gitlab/master/values.yaml.tpl
+
+Create the configuration file:
+
+<!-- export PROJECT_ID=$(gcloud config get-value project)
+export INGRESS_IP=$(gcloud compute addresses describe gitlab \
+    --region europe-central2 --format 'value(address)')
+export DOMAIN=${INGRESS_IP}.diploma.io
+export DB_PRIVATE_IP=$(gcloud sql instances describe gitlab-db \
+    --format 'value(ipAddresses[0].ipAddress)')
+export REDIS_PRIVATE_IP=$(gcloud redis instances describe gitlab \
+    --region=us-central1  --format 'value(host)')
+export CERT_MANAGER_EMAIL=$(gcloud config get-value account)
+
+cat values.yaml.tpl | envsubst > values.yaml
+Install the chart by using Helm: -->
+
+
+helm repo add gitlab https://charts.gitlab.io/
+helm install -f values.yaml gitlab gitlab/gitlab
+
+
+sudo /usr/local/bin/gitlab-runner  run --working-directory /home/gitlab-runner --config /etc/gitlab-runner/config.toml --service gitlab-runner --syslog --user alexb
